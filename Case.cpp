@@ -5,7 +5,7 @@ using namespace std;
 
 class Casa {
 private:
-    const int adresa;           // numarul adresei (int, nu string), inlocuieste id-ul
+    const int adresa;           
     string oras;
     float pret;
     float suprafata;
