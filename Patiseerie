@@ -1,0 +1,279 @@
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+enum Zona { CENTRALA = 1, PERIFERICA = 2 };
+
+class Patiserie {
+private:
+    const int id;
+    string denumire;
+    int nr_locuri;
+    int nr_angajati;
+    int nr_clienti;
+    Zona zona;
+    float* vectorVanzari;
+
+public:
+    static int nr_patiserii;
+
+    // Constructor implicit
+    Patiserie() : id(++nr_patiserii) {
+        this->denumire = "Default";
+        this->nr_locuri = 0;
+        this->nr_angajati = 0;
+        this->nr_clienti = 0;
+        this->zona = PERIFERICA;
+        this->vectorVanzari = nullptr;
+    }
+
+    // Constructor cu parametri
+    Patiserie(int id, string denumire, int nr_locuri,
+        int nr_angajati, int nr_clienti, Zona zona,
+        float* vectorVanzari) : id(id) {
+
+        this->denumire = denumire;
+        this->nr_locuri = nr_locuri;
+        this->nr_angajati = nr_angajati;
+        this->nr_clienti = nr_clienti;
+        this->zona = zona;
+
+        if (nr_locuri > 0 && vectorVanzari != nullptr) {
+            this->vectorVanzari = new float[nr_locuri];
+
+            for (int i = 0; i < nr_locuri; i++) {
+                this->vectorVanzari[i] = vectorVanzari[i];
+            }
+        }
+        else {
+            this->vectorVanzari = nullptr;
+        }
+
+        nr_patiserii++;
+    }
+
+    // Constructor de copiere
+    Patiserie(const Patiserie& p) : id(++nr_patiserii) {
+        this->denumire = p.denumire;
+        this->nr_locuri = p.nr_locuri;
+        this->nr_angajati = p.nr_angajati;
+        this->nr_clienti = p.nr_clienti;
+        this->zona = p.zona;
+
+        if (p.vectorVanzari != nullptr) {
+            this->vectorVanzari = new float[p.nr_locuri];
+
+            for (int i = 0; i < p.nr_locuri; i++) {
+                this->vectorVanzari[i] = p.vectorVanzari[i];
+            }
+        }
+        else {
+            this->vectorVanzari = nullptr;
+        }
+    }
+
+    // Operatorul =
+    void operator=(const Patiserie& p) {
+        if (this == &p) {
+            return;
+        }
+
+        float* vectorNou = nullptr;
+
+        if (p.vectorVanzari != nullptr) {
+            vectorNou = new float[p.nr_locuri];
+
+            for (int i = 0; i < p.nr_locuri; i++) {
+                vectorNou[i] = p.vectorVanzari[i];
+            }
+        }
+
+        if (this->vectorVanzari != nullptr) {
+            delete[] this->vectorVanzari;
+        }
+
+        this->denumire = p.denumire;
+        this->nr_locuri = p.nr_locuri;
+        this->nr_angajati = p.nr_angajati;
+        this->nr_clienti = p.nr_clienti;
+        this->zona = p.zona;
+        this->vectorVanzari = vectorNou;
+    }
+
+    // Metoda de afisare
+    void metodaAfisare() {
+        cout << endl << "Patiseria se numeste: " << this->denumire;
+        cout << endl << "Locuri in patiserie: " << this->nr_locuri;
+        cout << endl << "Angajati in patiserie: " << this->nr_angajati;
+        cout << endl << "Clienti in patiserie: " << this->nr_clienti;
+        cout << endl << "Id-ul patiseriei este: " << this->id;
+
+        cout << endl << "Zona: ";
+        if (this->zona == CENTRALA) {
+            cout << "CENTRALA";
+        }
+        else {
+            cout << "PERIFERICA";
+        }
+
+        if (this->vectorVanzari != nullptr && this->nr_locuri > 0) {
+            cout << endl << "Vanzari: ";
+
+            for (int i = 0; i < this->nr_locuri - 1; i++) {
+                cout << this->vectorVanzari[i] << ", ";
+            }
+
+            cout << this->vectorVanzari[this->nr_locuri - 1];
+        }
+
+        cout << endl;
+    }
+
+    // Metoda de schimbare
+    void metodaschimbare(int nr_locuri, int nr_angajati,
+        int nr_clienti) {
+
+        if (nr_locuri < 0) {
+            throw "Numarul de locuri nu poate fi negativ";
+        }
+
+        if (this->nr_locuri != nr_locuri) {
+            delete[] this->vectorVanzari;
+            this->vectorVanzari = nullptr;
+        }
+
+        this->nr_locuri = nr_locuri;
+        this->nr_angajati = nr_angajati;
+        this->nr_clienti = nr_clienti;
+    }
+
+    // Getter pentru numarul de locuri
+    int getNrLocuri() {
+        return this->nr_locuri;
+    }
+
+    // Setter pentru numarul de locuri
+    void setNrLocuri(int nrLocuriNou) {
+        if (nrLocuriNou >= 0) {
+            if (this->nr_locuri != nrLocuriNou) {
+                delete[] this->vectorVanzari;
+                this->vectorVanzari = nullptr;
+            }
+
+            this->nr_locuri = nrLocuriNou;
+        }
+        else {
+            throw "Valoare negativa";
+        }
+    }
+
+    // Getter pentru numarul de angajati
+    int getNrAngajati() {
+        return this->nr_angajati;
+    }
+
+    // Setter pentru numarul de angajati
+    void setNrAngajati(int nrAngajatiNou) {
+        if (nrAngajatiNou >= 0) {
+            this->nr_angajati = nrAngajatiNou;
+        }
+        else {
+            throw "Valoare negativa";
+        }
+    }
+
+    // Getter pentru vectorul de vanzari
+    float* getVectorVanzari() {
+        if (this->vectorVanzari == nullptr) {
+            return nullptr;
+        }
+
+        float* vectorNou = new float[this->nr_locuri];
+
+        for (int i = 0; i < this->nr_locuri; i++) {
+            vectorNou[i] = this->vectorVanzari[i];
+        }
+
+        return vectorNou;
+    }
+
+    // Setter pentru vectorul de vanzari
+    void setVectorVanzari(float* vector, int nrL) {
+        if (nrL < 0 || (nrL > 0 && vector == nullptr)) {
+            throw "Date invalide";
+        }
+
+        float* vectorNou = nullptr;
+
+        if (nrL > 0) {
+            vectorNou = new float[nrL];
+
+            for (int i = 0; i < nrL; i++) {
+                vectorNou[i] = vector[i];
+            }
+        }
+
+        if (this->vectorVanzari != nullptr) {
+            delete[] this->vectorVanzari;
+        }
+
+        this->nr_locuri = nrL;
+        this->vectorVanzari = vectorNou;
+    }
+
+    // Destructor
+    ~Patiserie() {
+        if (this->vectorVanzari != nullptr) {
+            delete[] this->vectorVanzari;
+        }
+    }
+};
+
+int Patiserie::nr_patiserii = 0;
+
+int main() {
+
+    // Constructor implicit
+    Patiserie Luca;
+    Luca.metodaAfisare();
+
+    // Modificarea atributelor
+    Luca.metodaschimbare(10, 7, 20);
+    Luca.metodaAfisare();
+
+    // Constructor cu parametri
+    float vectorVanzari[] = {35, 27, 41};
+
+    Patiserie* pMatei = new Patiserie(
+        4, "Matei", 3, 10, 25, CENTRALA, vectorVanzari);
+
+    pMatei->metodaAfisare();
+
+    // Constructor de copiere
+    Patiserie Ana = *pMatei;
+    Ana.metodaAfisare();
+
+    // Operatorul =
+    Luca = *pMatei;
+    Luca.metodaAfisare();
+
+    // Afisarea numarului de patiserii construite
+    cout << endl << "Am construit "
+         << Patiserie::nr_patiserii << " patiserii!" << endl;
+
+    // Testare getter
+    cout << endl << "Numar locuri Luca: "
+         << Luca.getNrLocuri();
+
+    // Testare setter
+    Luca.setNrAngajati(15);
+
+    cout << endl << "Numar angajati Luca: "
+         << Luca.getNrAngajati();
+
+    // Eliberarea memoriei
+    delete pMatei;
+
+    return 0;
+}
