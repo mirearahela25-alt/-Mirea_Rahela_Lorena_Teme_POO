@@ -15,7 +15,6 @@ public:
         salariu = s;
     }
 
-    // Operatorul =
     Angajat& operator=(const Angajat& a) {
         if (this != &a) {
             nume = a.nume;
@@ -40,7 +39,6 @@ int main() {
     Angajat a("Ion", 25, 3000);
     Angajat b("Maria", 30, 4000);
 
-    // Variabila pointer
     Angajat* p = &a;
 
     cout << "Date initiale:" << endl;
