@@ -15,6 +15,16 @@ public:
         salariu = s;
     }
 
+    // Operatorul =
+    Angajat& operator=(const Angajat& a) {
+        if (this != &a) {
+            nume = a.nume;
+            varsta = a.varsta;
+            salariu = a.salariu;
+        }
+        return *this;
+    }
+
     void afisare() {
         cout << "Nume: " << nume << endl;
         cout << "Varsta: " << varsta << endl;
@@ -28,14 +38,24 @@ public:
 
 int main() {
     Angajat a("Ion", 25, 3000);
+    Angajat b("Maria", 30, 4000);
+
+    // Variabila pointer
+    Angajat* p = &a;
 
     cout << "Date initiale:" << endl;
-    a.afisare();
+    p->afisare();
 
-    a.marireSalariu(10);
+    p->marireSalariu(10);
 
     cout << "Dupa marirea salariului:" << endl;
-    a.afisare();
+    p->afisare();
+
+    // Folosirea operatorului =
+    b = a;
+
+    cout << "Dupa atribuire:" << endl;
+    b.afisare();
 
     return 0;
 }
