@@ -51,7 +51,6 @@ int main() {
     cout << "Dupa marirea salariului:" << endl;
     p->afisare();
 
-    // Folosirea operatorului =
     b = a;
 
     cout << "Dupa atribuire:" << endl;
